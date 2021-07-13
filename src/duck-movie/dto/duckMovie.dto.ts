@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export default class DuckMovieDto {
   @IsString()
@@ -28,4 +28,8 @@ export default class DuckMovieDto {
   @IsString()
   @IsNotEmpty()
   duration!: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  categoryIdx!: number;
 }

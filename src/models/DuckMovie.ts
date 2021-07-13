@@ -7,6 +7,7 @@ import {
   RelationId
 } from "typeorm";
 import User from './user';
+import Category from "./Category";
 
 /**
  * @description 덕무비
@@ -46,4 +47,13 @@ export default class DuckMovie {
 
   @Column({ name: 'submit_date' })
   submitDate!: Date;
+
+  @RelationId((category: Category) => category.idx)
+  categoryIdx!: number;
+
+  @JoinColumn({ name: 'fk_category_idx' })
+  @ManyToOne(type => Category, {
+    onDelete: 'CASCADE',
+  })
+  category!: Category;
 }

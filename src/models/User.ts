@@ -3,6 +3,7 @@ import Comment from "./Comment";
 import Like from "./Like";
 import Post from "./Post";
 import Subscribe from "./Subscribe";
+import DuckMovie from "./DuckMovie";
 
 @Entity('user')
 export default class User {
@@ -29,4 +30,7 @@ export default class User {
 
 	@OneToMany(type => Subscribe, subscribe => subscribe.user)
 	subscribe!: Subscribe[];
+
+	@OneToMany(type => DuckMovie, duckMovie => duckMovie.userId)
+	duckMovie!: DuckMovie[];
 }

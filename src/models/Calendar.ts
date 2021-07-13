@@ -9,6 +9,9 @@ export default class Calendar {
 	@Column()
 	content!: string;
 
+	@Column()
+	date!: Date;
+
 	@JoinColumn({ name: 'fk_category_idx' })
 	@ManyToOne(type => Category, {
 		onDelete: 'CASCADE'

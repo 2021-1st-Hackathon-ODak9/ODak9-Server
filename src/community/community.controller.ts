@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { CommunityService } from './community.service';
 import AuthGuard, * as authMiddleware from 'src/middleware/auth.middleware';
 import PostEntity from 'src/models/Post';
@@ -54,6 +54,35 @@ export class CommunityController {
 		}
 	}
 
+	@Get('/sort')
+	@HttpCode(200)
+	async getPostsSort() {
+		const posts: PostEntity[] = await this.comService.getPostsSortByDate();
+
+		return {
+			status: 200,
+			data: {
+				posts,
+			},
+			message: '정렬'
+		}
+	}
+
+	@Get('/my')
+	@UseGuards(new AuthGuard())
+	@HttpCode(200)
+	async getMyPosts(@Token() user: User) {
+		const posts: PostEntity[] = await this.comService.getMyPosts(user);
+
+		return {
+			status: 200,
+			data: {
+				posts,
+			},
+			message: '자신의 글 조회 성공'
+		}
+	}
+
 	@Post('/')
 	@UseGuards(new AuthGuard())
 	@HttpCode(200)
@@ -75,6 +104,18 @@ export class CommunityController {
 		return {
 			status: 200,
 			message: '글 수정 성공'
+		}
+	}
+
+	@Delete('/:idx')
+	@UseGuards(new AuthGuard())
+	@HttpCode(200)
+	async deletePost(@Token() user: User, @Param('idx') postIdx: number) {
+		await this.comService.deletePost(user, postIdx);
+
+		return {
+			status: 200,
+			message: '글 삭제 성공'
 		}
 	}
 }

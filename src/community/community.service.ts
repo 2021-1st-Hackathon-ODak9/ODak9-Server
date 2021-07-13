@@ -49,10 +49,11 @@ export class CommunityService {
 		return posts;
 	}
 
-	// public async getPostsSortByDate(): Promise<Post[]> {
-	// 	const posts: Post[] = await this.comRepository.createQueryBuilder()
-
-	// }
+	public async getPostsSortByDate(): Promise<Post[]> {
+		return this.comRepository.createQueryBuilder()
+			.orderBy('created_at', 'DESC')
+			.getMany();
+	}
 
 	public async getPost(postIdx: number): Promise<Post | undefined> {
 		const post: Post = await this.comRepository.findOne({
@@ -62,6 +63,16 @@ export class CommunityService {
 		})
 
 		return post;
+	}
+
+	public async getMyPosts(user: User): Promise<Post[]> {
+		const posts: Post[] = await this.comRepository.find({
+			where: {
+				userId: user.id
+			}
+		});
+
+		return posts;
 	}
 
 	public async addPost(postDto: PostDto, user: User): Promise<void> {
