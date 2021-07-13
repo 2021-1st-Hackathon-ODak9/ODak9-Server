@@ -21,6 +21,7 @@ export class CommunityService {
 		const posts: Post[] = await this.comRepository.createQueryBuilder('post')
 			.leftJoinAndSelect('post.user', 'user')
 			.leftJoinAndSelect('post.category', 'category')
+			.orderBy('post.idx', 'DESC')
 			.getMany();
 
 		return posts;
@@ -31,6 +32,7 @@ export class CommunityService {
 			.leftJoinAndSelect('post.user', 'user')
 			.leftJoinAndSelect('post.category', 'category')
 			.where('title LIKE :word', { word: `%${word}%` })
+			.orderBy('post.idx', 'DESC')
 			.getMany();
 
 		return posts;
@@ -41,10 +43,16 @@ export class CommunityService {
 			.leftJoinAndSelect('post.user', 'user')
 			.leftJoinAndSelect('post.category', 'category')
 			.where('fk_category_idx = :categoryIdx', { categoryIdx })
+			.orderBy('post.idx', 'DESC')
 			.getMany();
 
 		return posts;
 	}
+
+	// public async getPostsSortByDate(): Promise<Post[]> {
+	// 	const posts: Post[] = await this.comRepository.createQueryBuilder()
+
+	// }
 
 	public async getPost(postIdx: number): Promise<Post | undefined> {
 		const post: Post = await this.comRepository.findOne({
@@ -119,5 +127,19 @@ export class CommunityService {
 			category: isCategory,
 		});
 		await this.comRepository.save(isPost);
+	}
+
+	public async deletePost(user: User, postIdx: number): Promise<void> {
+		const isPost: Post | undefined = await this.getPost(postIdx);
+
+		if (isPost === undefined) {
+			throw new BadRequestException('존재하지 않는 게시글');
+		}
+
+		if (isPost.userId !== user.id) {
+			throw new UnauthorizedException('본인이 쓴 게시물이 아닙니다')
+		}
+
+		await this.comRepository.remove(isPost);
 	}
 }

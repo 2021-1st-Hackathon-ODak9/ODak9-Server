@@ -18,12 +18,12 @@ export default class Subscribe {
 	@RelationId((subscribe: Subscribe) => subscribe.user)
 	userId!: string;
 
-	@JoinColumn({ name: 'fk_detailcategory_idx' })
+	@JoinColumn({ name: 'fk_category_idx' })
 	@ManyToOne(type => Category, {
 		onDelete: 'CASCADE'
 	})
-	detailCategory!: DetailCategory;
+	category!: Category;
 
-	@RelationId((subsribe: Subscribe) => subsribe.detailCategory)
-	detailCategoryidx!: number;
+	@RelationId((subsribe: Subscribe) => subsribe.category)
+	categoryidx!: number;
 }

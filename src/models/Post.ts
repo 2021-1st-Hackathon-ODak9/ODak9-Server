@@ -1,5 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import Category from "./Category";
+import Comment from "./Comment";
+import Like from "./Like";
 import User from "./User";
 
 @Entity('post')
@@ -31,4 +33,16 @@ export default class Post {
 
     @RelationId((post: Post) => post.category)
     categoryIdx!: number;
+
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp',
+    })
+    createdAt!: Date;
+
+    @OneToMany(type => Like, like => like.post)
+    like!: Like[];
+
+    @OneToMany(type => Comment, comment => comment.post)
+    comment!: Comment[];
 }
